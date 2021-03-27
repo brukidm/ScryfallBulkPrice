@@ -17,7 +17,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if "$cicija" in message or "$lujo" in message:
+    if "$cicija" in message.content or "$lujo" in message.content:
         entries = message.content.split("\n")
         command = entries[0]
         entries = entries[1:]
@@ -30,18 +30,24 @@ async def on_message(message):
             resp = requests.get(request_url(name))
             data = json.loads(resp.content)
             if not resp.status_code == 200:
-                message += f"No price in € found for card {name}\n"
-                continue
-            if data["data"][0]["prices"]["eur"]:
-                value = float(data["data"][0]["prices"]["eur"])
-            elif data["data"][0]["prices"]["eur_foil"]:
-              value = float(data["data"][0]["prices"]["eur_foil"])
+              message += f"No price in € found for card {name}\n"
+              continue
+            for card in data["data"]:
+              if len(name) == len(card["name"]):
+                card = card
+                break
+            if card["prices"]["eur"]:
+                value = float(card["prices"]["eur"])
+            elif card["prices"]["eur_foil"]:
+              value = float(card["prices"]["eur_foil"])
             else:
               to_print += f"No price in € found for card {name}\n"
             if value:
               value = round(value, 2)
-              if "lujo" in command:
+              if "$lujo" in command:
                 if value < 0.13:
+                  if "$lujolist" in command:
+                    to_print += f"Rounded up the price for {name} from {value}"
                   value = 0.13
               price =  value * int(amount)
               cards[name] = (amount, price)
