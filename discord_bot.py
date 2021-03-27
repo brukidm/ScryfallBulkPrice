@@ -18,6 +18,7 @@ async def on_message(message):
 
     if message.content.startswith('$bulkprice'):
         entries = message.content.split("\n")
+        command = entries[0]
         entries = entries[1:]
         total_price = 0
         cards = {}
@@ -29,7 +30,7 @@ async def on_message(message):
                 continue
             if data["data"][0]["prices"]["eur"]:
                 value = float(data["data"][0]["prices"]["eur"])
-                if "round" in message.content:
+                if "round" in command:
                   if value < 0.13:
                     value = 0.13
                 price =  value * int(amount)
