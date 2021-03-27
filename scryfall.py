@@ -4,7 +4,7 @@ import json
 
 def request_url(name):
     name = name.replace(" ", "+")
-    return f"https://api.scryfall.com/cards/named?fuzzy={name}&prices=eur"
+    return f"https://api.scryfall.com/cards/search?q={name}&order=eur&dir=asc"
 
 with open(r"buylist.txt") as f:
     lines = f.read().split('\n')
@@ -17,8 +17,8 @@ with open(r"buylist.txt") as f:
         if not resp.status_code == 200:
             print(f"Card {name} doesn't exist.")
             continue
-        if data["prices"]["eur"]:
-            price = float(data["prices"]["eur"]) * int(amount)
+        if data["data"][0]["prices"]["eur"]:
+            price = float(data["data"][0]["prices"]["eur"]) * int(amount)
             cards[name] = (amount, price)
             total_price += price
         else:
