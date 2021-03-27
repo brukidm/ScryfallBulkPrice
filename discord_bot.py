@@ -25,6 +25,7 @@ async def on_message(message):
         cards = {}
         to_print = ""
         for line in entries:
+          try:
             amount, name = re.split(r"\s+", line, 1)
             resp = requests.get(request_url(name))
             data = json.loads(resp.content)
@@ -38,13 +39,15 @@ async def on_message(message):
                   if value < 0.13:
                     value = 0.13
                 price =  value * int(amount)
-                to_print += f"{name}: {price}€\n"
                 cards[name] = (amount, price)
                 total_price += price
             else:
-              message += f"No price in € found for card {name}\n"
+              to_print += f"No price in € found for card {name}\n"
+          except Exception as ex:
+            print(ex)
         if total_price > 0:
-          await message.channel.send(to_print)
+          if to_print:
+            await message.channel.send(to_print)
           await message.channel.send(f"Total: {round(total_price, 2)} €")
 
 keep_alive()
