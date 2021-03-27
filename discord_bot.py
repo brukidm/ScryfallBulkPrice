@@ -37,7 +37,7 @@ async def on_message(message):
                 card = card
                 break
             if card["prices"]["eur"]:
-                value = float(card["prices"]["eur"])
+              value = float(card["prices"]["eur"])
             elif card["prices"]["eur_foil"]:
               value = float(card["prices"]["eur_foil"])
             else:
