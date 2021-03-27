@@ -1,5 +1,5 @@
 # ScryfallBulkPrice
-Python script that calculates the total price of MTG card list based on Scryfall trends
+Python script (and a Discord bot) that calculates the total price of MTG card list based on Scryfall trends
 
 Requirements:
 - requests
