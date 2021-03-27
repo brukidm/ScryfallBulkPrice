@@ -12,6 +12,19 @@ def request_url(name):
 
 client = discord.Client()
 
+ignore_lands = [
+  "Snow-Covered Island",
+  "Snow-Covered Swamp",
+  "Snow-Covered Forest",
+  "Snow-Covered Mountain",
+  "Snow-Covered Plains",
+  "Island", 
+  "Swamp", 
+  "Forest",
+  "Mountain", 
+  "Plains"
+]
+
 @client.event
 async def on_message(message):
     if message.author == client.user:
@@ -56,7 +69,7 @@ async def on_message(message):
               if "$cicijalist" in command:
                 to_print += f"{name}: {value:.2f} €\n"
               # round the prices lower than 0.13 to 0.13
-              if "$lujo" in command and name not in ["Island", "Swamp", "Forest", "Mountain", "Plains"]:
+              if "$lujo" in command and name not in ignore_lands:
                 if value < 0.13:
                   # print the cards that are worth less than 0.13 by default
                   if "$lujolist" in command:
@@ -72,7 +85,7 @@ async def on_message(message):
           if to_print:
             await message.channel.send(to_print)
           if under_13:
-            await message.channel.send("Cards under 0.13€ limit: {under_13}")
+            await message.channel.send(f"Cards under 0.13€ limit: {under_13}")
           await message.channel.send(f"Total: {round(total_price, 2):.2f} €")
 
 keep_alive()
