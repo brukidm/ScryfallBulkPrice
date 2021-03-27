@@ -18,36 +18,46 @@ async def on_message(message):
         return
 
     if "$cicija" in message.content or "$lujo" in message.content:
+        # separate the command from the card list
         entries = message.content.split("\n")
         command = entries[0]
         entries = entries[1:]
         total_price = 0
         cards = {}
-        to_print = ""
+        to_print = "" # additional messages that might be shown
         for line in entries:
           try:
             amount, name = re.split(r"\s+", line, 1)
             resp = requests.get(request_url(name))
             data = json.loads(resp.content)
+            # incorrect file name etc.
             if not resp.status_code == 200:
-              message += f"No price in € found for card {name}\n"
+              to_print += f"No price in € found for card {name}\n"
               continue
+            # full text search can yield multiple results
+            # this is a way to exclude the wrong cards
             for card in data["data"]:
               if len(name) == len(card["name"]):
                 card = card
                 break
+            # if normal price exists, good
             if card["prices"]["eur"]:
               value = float(card["prices"]["eur"])
+            # if it doesn't, at least check the foil price
             elif card["prices"]["eur_foil"]:
               value = float(card["prices"]["eur_foil"])
             else:
               to_print += f"No price in € found for card {name}\n"
+            # if the minimal value is found, do some more stuff
             if value:
               value = round(value, 2)
+              # print the value for each card
               if "$cicijalist" in command:
                 to_print += f"{name}: {value:.2f} €\n"
+              # round the prices lower than 0.13 to 0.13
               if "$lujo" in command:
                 if value < 0.13:
+                  # print the cards that are worth less than 0.13 by default
                   if "$lujolist" in command:
                     to_print += f"Rounded up the price for {name} from {value:.2f} €\n"
                   value = 0.13
