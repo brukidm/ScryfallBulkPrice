@@ -44,10 +44,12 @@ async def on_message(message):
               to_print += f"No price in € found for card {name}\n"
             if value:
               value = round(value, 2)
+              if "$cicijalist" in command:
+                to_print += f"{name}: {value:.2f} €\n"
               if "$lujo" in command:
                 if value < 0.13:
                   if "$lujolist" in command:
-                    to_print += f"Rounded up the price for {name} from {value}"
+                    to_print += f"Rounded up the price for {name} from {value:.2f} €\n"
                   value = 0.13
               price =  value * int(amount)
               cards[name] = (amount, price)
@@ -57,7 +59,7 @@ async def on_message(message):
         if total_price > 0:
           if to_print:
             await message.channel.send(to_print)
-          await message.channel.send(f"Total: {round(total_price, 2)} €")
+          await message.channel.send(f"Total: {round(total_price, 2):.2f} €")
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
