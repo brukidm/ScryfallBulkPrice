@@ -34,15 +34,18 @@ async def on_message(message):
                 continue
             if data["data"][0]["prices"]["eur"]:
                 value = float(data["data"][0]["prices"]["eur"])
-                value = round(value, 2)
-                if "round" in command:
-                  if value < 0.13:
-                    value = 0.13
-                price =  value * int(amount)
-                cards[name] = (amount, price)
-                total_price += price
+            elif data["data"][0]["prices"]["eur_foil"]:
+              value = float(data["data"][0]["prices"]["eur_foil"])
             else:
               to_print += f"No price in € found for card {name}\n"
+            if value:
+              value = round(value, 2)
+              if "round" in command:
+                if value < 0.13:
+                  value = 0.13
+              price =  value * int(amount)
+              cards[name] = (amount, price)
+              total_price += price
           except Exception as ex:
             print(ex)
         if total_price > 0:
