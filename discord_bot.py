@@ -23,6 +23,7 @@ async def on_message(message):
         command = entries[0]
         entries = entries[1:]
         total_price = 0
+        under_13 = 0
         cards = {}
         to_print = "" # additional messages that might be shown
         for line in entries:
@@ -55,11 +56,12 @@ async def on_message(message):
               if "$cicijalist" in command:
                 to_print += f"{name}: {value:.2f} €\n"
               # round the prices lower than 0.13 to 0.13
-              if "$lujo" in command:
+              if "$lujo" in command and name not in ["Island", "Swamp", "Forest", "Mountain", "Plains"]:
                 if value < 0.13:
                   # print the cards that are worth less than 0.13 by default
                   if "$lujolist" in command:
                     to_print += f"Rounded up the price for {name} from {value:.2f} €\n"
+                    under_13 += 1
                   value = 0.13
               price =  value * int(amount)
               cards[name] = (amount, price)
@@ -69,6 +71,8 @@ async def on_message(message):
         if total_price > 0:
           if to_print:
             await message.channel.send(to_print)
+          if under_13:
+            await message.channel.send("Cards under 0.13€ limit: {under_13}")
           await message.channel.send(f"Total: {round(total_price, 2):.2f} €")
 
 keep_alive()
