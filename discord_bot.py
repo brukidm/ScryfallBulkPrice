@@ -28,7 +28,11 @@ async def on_message(message):
             if not resp.status_code == 200:
                 continue
             if data["data"][0]["prices"]["eur"]:
-                price = float(data["data"][0]["prices"]["eur"]) * int(amount)
+                value = float(data["data"][0]["prices"]["eur"])
+                if "round" in message.content:
+                  if value < 0.13:
+                    value = 0.13
+                price =  value * int(amount)
                 cards[name] = (amount, price)
                 total_price += price
         if total_price > 0:
