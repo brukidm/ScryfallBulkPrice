@@ -17,7 +17,7 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('$bulkprice'):
+    if "$cicija" in message or "$lujo" in message:
         entries = message.content.split("\n")
         command = entries[0]
         entries = entries[1:]
@@ -40,7 +40,7 @@ async def on_message(message):
               to_print += f"No price in € found for card {name}\n"
             if value:
               value = round(value, 2)
-              if "round" in command:
+              if "lujo" in command:
                 if value < 0.13:
                   value = 0.13
               price =  value * int(amount)
