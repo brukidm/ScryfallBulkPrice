@@ -7,6 +7,7 @@ Requirements:
 - json
 
 Sample input:
+```
 1 Crypt Rats
 4 Dusk Legion Zealot
 3 Gray Merchant
@@ -18,3 +19,4 @@ Sample input:
 3 Shred Memory
 2 Shrivel
 4 Wrench Mind
+```
