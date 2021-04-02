@@ -78,7 +78,7 @@ async def on_message(message):
                                 to_print += f"Rounded up the price for {name} from {value:.2f} €\n"
                                 under_13 += 1
                             value = 0.13
-                    price =  value * int(amount)
+                    price = value * int(amount)
                     cards[name] = (amount, price)
                     total_price += price
             except Exception as ex:
