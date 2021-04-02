@@ -1,7 +1,7 @@
 import discord
 import os
 
-import requests
+import grequests
 import re
 import json
 from keep_alive import keep_alive
@@ -39,12 +39,17 @@ async def on_message(message):
         under_13 = 0
         cards = {}
         to_print = "" # additional messages that might be shown
-        for line in entries:
-            try:
+        try:
+            for line in entries:
                 if not line[0].isdigit():
                     line = "1 " + line
                 amount, name = re.split(r"\s+", line, 1)
-                resp = requests.get(request_url(name))
+                url_to_send = request_url(name)
+                cards[url_to_send] = amount, name
+            rs = (grequests.get(u) for u in cards.keys())
+            responses = grequests.map(rs)
+            for resp in responses:
+                amount, name = cards[resp.url]
                 data = json.loads(resp.content)
                 # incorrect file name etc.
                 if not resp.status_code == 200:
@@ -79,10 +84,9 @@ async def on_message(message):
                                 under_13 += 1
                             value = 0.13
                     price = value * int(amount)
-                    cards[name] = (amount, price)
                     total_price += price
-            except Exception as ex:
-                print(ex)
+        except Exception as ex:
+            print(ex)
         if total_price > 0:
             if to_print:
                 await message.channel.send(to_print)
