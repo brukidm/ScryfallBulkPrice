@@ -41,6 +41,8 @@ async def on_message(message):
         to_print = "" # additional messages that might be shown
         for line in entries:
           try:
+            if not line[0].isdigit():
+              line = "1 " + line
             amount, name = re.split(r"\s+", line, 1)
             resp = requests.get(request_url(name))
             data = json.loads(resp.content)
