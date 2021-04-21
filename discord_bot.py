@@ -89,10 +89,10 @@ async def on_message(message):
             print(ex)
         if total_price > 0:
             if to_print:
-                await message.channel.send(to_print)
+                await message.channel.send("```\n" + to_print + "\n```")
             if under_13:
-                await message.channel.send(f"Cards under 0.13€ limit: {under_13}")
-            await message.channel.send(f"Total: {round(total_price, 2):.2f} €")
+                await message.channel.send(f"```\nCards under 0.13€ limit: {under_13}\n```")
+            await message.channel.send(f"```\nTotal: {round(total_price, 2):.2f} €\n```")
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
