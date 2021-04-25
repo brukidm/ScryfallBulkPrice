@@ -61,6 +61,7 @@ async def on_message(message):
                     if len(name) == len(card["name"]):
                         card = card
                         break
+                name = card["name"]
                 # if normal price exists, good
                 if card["prices"]["eur"]:
                     value = float(card["prices"]["eur"])
