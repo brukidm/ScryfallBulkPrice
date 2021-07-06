@@ -2,6 +2,7 @@ import discord
 import os
 
 import grequests
+import requests
 import re
 import json
 from keep_alive import keep_alive
@@ -30,6 +31,18 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    if "!pdlegal" in message.content:
+      entries = message.content.split("\n")
+      if len(entries) == 1:
+        to_check = re.split(r"\s+", entries[0], 1)
+        name = to_check[1]
+        url_to_send = request_url(name)
+        r = requests.get(url_to_send)
+        r = r.json()
+        if "not_legal" in r["data"][0]["legalities"]["penny"]:
+          await message.channel.send("```\n" + "Not legal!" + "\n```")
+        else:
+          await message.channel.send("```\n" + "Legal!" + "\n```")
     if "$cicija" in message.content or "$lujo" in message.content:
         # separate the command from the card list
         entries = message.content.split("\n")
